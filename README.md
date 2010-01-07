@@ -15,12 +15,12 @@ MooZoom can be initialized at any time, but it's best to initialize it on the
 "domready" event.  By default, zooms will take 250ms, but you can change this with
 the "duration" option.
 
-MooZoom will look through the DOM for <a><img></a> patterns.  The inner image
-should be the thumbnail version, and the href for the <a> tag should be a link
-to the full scale version of the image.  In this way, it's 100% compatible with
-non-JavaScript browsers as well.
+MooZoom will look through the DOM for &lt;a&gt;&lt;img&gt;&lt;/a&gt; patterns.
+The inner image should be the thumbnail version, and the href for the &lt;a&gt;
+tag should be a link to the full scale version of the image.  In this way, it's
+100% compatible with non-JavaScript browsers as well.
 
-### HTML
+###
 	<a href="/images/picture1.jpg"><img src="/images/picture1_thumb.jpg"></a>
 	<a href="/images/picture2.jpg"><img src="/images/picture2_thumb.jpg"></a>
 	<a href="/images/picture3.jpg"><img src="/images/picture3_thumb.jpg"></a>
