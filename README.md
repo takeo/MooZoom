@@ -6,6 +6,8 @@ full images with shadows.  Shadows are provided by the box-shadow CSS property
 for browsers that support it, thus no extra images are required.  This can be a
 drop-in replacement for FancyZoom, since it looks for the same DOM structures.
 
+Compatible with all modern browsers and IE6.
+
 ![Screenshot](http://luke.ehresman.org/images/screenshots/moozoom_thumb.png)
 
 How to Use
