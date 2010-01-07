@@ -20,7 +20,6 @@ The inner image should be the thumbnail version, and the href for the &lt;a&gt;
 tag should be a link to the full scale version of the image.  In this way, it's
 100% compatible with non-JavaScript browsers as well.
 
-###
 	<a href="/images/picture1.jpg"><img src="/images/picture1_thumb.jpg"></a>
 	<a href="/images/picture2.jpg"><img src="/images/picture2_thumb.jpg"></a>
 	<a href="/images/picture3.jpg"><img src="/images/picture3_thumb.jpg"></a>
