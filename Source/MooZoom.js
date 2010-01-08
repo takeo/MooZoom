@@ -95,7 +95,7 @@ var MooZoom = new Class({
 			// can't call these until the image is loaded and injected into
 			// the DOM.  This code assumes when they click on the thumbnail,
 			// that the larger image has finished loading.
-			if (!bigCoords) bigCoords = container.getCoordinates();
+			if (!bigCoords) bigCoords = {width: container.width, height: container.height};
 			if (!smallCoords) smallCoords = img.getCoordinates();
 
 			var startWidth = (smallCoords.width/bigCoords.width) * bigCoords.width;
@@ -178,7 +178,7 @@ var MooZoom = new Class({
 		// create the event handler to shring the displayed image preview
 		var closeEvent = function(e) {
 			// lazy load these values, if they haven't already been set
-			if (!bigCoords) bigCoords = container.getCoordinates();
+			if (!bigCoords) bigCoords = {width: container.width, height: container.height};
 			if (!smallCoords) smallCoords = img.getCoordinates();
 
 			var endWidth = (smallCoords.width/bigCoords.width) * bigCoords.width;
