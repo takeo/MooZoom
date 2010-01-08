@@ -36,9 +36,7 @@ var MooZoom = new Class({
 					"left": -99999,
 					"position": "absolute",
 					"cursor": "pointer",
-					"border": "1px solid #000",
-					"-moz-box-shadow": "0px 2px 15px #000",
-					"-webkit-box-shadow": "0px 2px 15px #000"
+					"border": "1px solid #000"
 				}
 			}).inject(document.body); // preload the image
 
@@ -68,7 +66,15 @@ var MooZoom = new Class({
 					"height": startHeight
 				});
 
-				var morph = new Fx.Morph(container, {duration: this.options.duration});
+				var morph = new Fx.Morph(container, {
+					duration: this.options.duration,
+					onComplete: function(e) {
+						container.setStyles({
+							"-moz-box-shadow": "0px 2px 15px #000",
+							"-webkit-box-shadow": "0px 2px 15px #000"
+						});
+					}
+				});
 				morph.start({
 					height: bigCoords.height,
 					width: bigCoords.width,
@@ -94,6 +100,10 @@ var MooZoom = new Class({
 							"left": -99999
 						});
 					}
+				});
+				container.setStyles({
+					"-moz-box-shadow": "none",
+					"-webkit-box-shadow": "none"
 				});
 				morph.start({
 					width: endWidth,
