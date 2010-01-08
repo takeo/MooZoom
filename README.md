@@ -22,7 +22,7 @@ The "transition" option can be used to override the default Fx.Transition.
 
 Important note: The close button image is located in the Images directory.
 By default, MooZoom will attempt to find that image at /images/moozoom_close.png.
-If you want the close image located elsewhere, use the "closeImageSrc" option.
+If you want the image located elsewhere, use the "imageRoot" option.
 
 MooZoom will look through the DOM for &lt;a&gt;&lt;img&gt;&lt;/a&gt; patterns.
 The inner image should be the thumbnail version, and the href for the &lt;a&gt;
@@ -36,7 +36,16 @@ tag should be a link to the full scale version of the image.  In this way, it's
 		window.addEvent("domready", function() {
 			new MooZoom({
 				duration: 150,
-				closeImageSrc: "/images/plugins/moozoom_close.png"
+				imageRoot: "/images/plugins/"
 			});
 		});
 	</script>
+
+Options
+-------
+
+* **duration**: (int) number of ms for the open and close animation. defualt: 250
+* **imageRoot**: (string) location of the close icon.  default: /images/
+* **close**: (string) position of the close button.  possible values: "top-left", "top-right", "bottom-left", "bottom-right", and null.  If null, no close button will be displayed.
+* **linkSelector**: (string) this is the first selector that is executed. It should return a set of link elements. The href of these link elements should point to a full-sized image. Default: "a"
+* **imageSelector**: (string) on each element returned by the linkSelector, this imageSelector will be applied to find the thumbnail image element. By default a linkSelector and imageSelector combination will be looking for patterns like &lt;a href=".."&gt;&lt;img src=".."&gt;&lt;/a&gt;. Default: "img"

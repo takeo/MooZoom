@@ -21,7 +21,7 @@ Click on the thumbnail images.
 	window.addEvent("domready", function() {
 			new MooZoom({
 				duration: 200,
-				closeImageSrc: "../Images/moozoom_close.png"
+				imageRoot: "../Images"
 			});
 		});
 </script>

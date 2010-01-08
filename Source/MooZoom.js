@@ -31,13 +31,15 @@ var MooZoom = new Class({
 		 *   looking for patterns like <a href=".."><img src=".."></a>
 		 */
 		imageSelector: "img",
-		closeImageSrc: "/images/moozoom_close.png",
+		imageRoot: "/images/",
 		transition: Fx.Transitions.linear.easeOut,
 		duration: 250,
 		close: "top-left"
 	},
 
 	initialize: function(options) {
+		if ($chk(options.imageRoot) && options.imageRoot[options.imageRoot.length-1] != "/")
+			options.imageRoot += "/";
 		this.setOptions(options);
 
 		this.elements = document.getElements(this.options.linkSelector);
@@ -63,7 +65,7 @@ var MooZoom = new Class({
 		}).inject(document.body); // preload the image
 		if (this.options.close) {
 			var close = new Element("img", {
-				src: this.options.closeImageSrc,
+				src: this.options.imageRoot+"/moozoom_close.png",
 				styles: {
 					"opacity": 0,
 					"top": -99999,
