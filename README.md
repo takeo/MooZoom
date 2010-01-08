@@ -27,7 +27,7 @@ If you want the image located elsewhere, use the "imageRoot" option.
 MooZoom will look through the DOM for &lt;a&gt;&lt;img&gt;&lt;/a&gt; patterns.
 The inner image should be the thumbnail version, and the href for the &lt;a&gt;
 tag should be a link to the full scale version of the image.  In this way, it's
-100% compatible with non-JavaScript browsers as well.
+compatible with non-JavaScript browsers as well.
 
 	<a href="/images/picture1.jpg"><img src="/images/picture1_thumb.jpg"></a>
 	<a href="/images/picture2.jpg"><img src="/images/picture2_thumb.jpg"></a>
