@@ -38,9 +38,9 @@ var MooZoom = new Class({
 	},
 
 	initialize: function(options) {
-		if ($chk(options.imageRoot) && options.imageRoot[options.imageRoot.length-1] != "/")
-			options.imageRoot += "/";
 		this.setOptions(options);
+		if (this.options.imageRoot[this.options.imageRoot.length-1] != "/")
+			this.options.imageRoot += "/";
 
 		this.elements = document.getElements(this.options.linkSelector);
 		this.elements.each(function(a) {
