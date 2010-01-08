@@ -39,6 +39,16 @@ var MooZoom = new Class({
 					"border": "1px solid #000"
 				}
 			}).inject(document.body); // preload the image
+			var close = new Element("img", {
+				src: "../Images/moozoom_close.png",
+				styles: {
+					"opacity": 0,
+					"top": -99999,
+					"left": -99999,
+					"position": "absolute",
+					"cursor": "pointer"
+				}
+			}).inject(document.body); // preload the image
 
 			a.setProperty("href", null);
 			a.setStyle("cursor", "pointer");
@@ -69,6 +79,11 @@ var MooZoom = new Class({
 				var morph = new Fx.Morph(container, {
 					duration: this.options.duration,
 					onComplete: function(e) {
+						close.setStyles({
+							"top": endTop-10,
+							"left": endLeft-10
+						});
+						close.morph({"opacity": 1});
 						container.setStyles({
 							"-moz-box-shadow": "0px 2px 15px #000",
 							"-webkit-box-shadow": "0px 2px 15px #000"
@@ -85,7 +100,7 @@ var MooZoom = new Class({
 			}.bind(this));
 
 			// shrink the large popup image
-			container.addEvent("click", function(e) {
+			var closeEvent = function(e) {
 				if (!bigCoords) bigCoords = container.getCoordinates();
 				if (!smallCoords) smallCoords = img.getCoordinates();
 
@@ -101,6 +116,11 @@ var MooZoom = new Class({
 						});
 					}
 				});
+				close.setStyles({
+					"top": -99999,
+					"left": -99999,
+					"opacity": 0
+				});
 				container.setStyles({
 					"-moz-box-shadow": "none",
 					"-webkit-box-shadow": "none"
@@ -112,7 +132,10 @@ var MooZoom = new Class({
 					top: smallCoords.top,
 					left: smallCoords.left
 				});
-			}.bind(this));
+				e.stopPropagation();
+			}.bind(this);
+			container.addEvent("click", closeEvent);
+			close.addEvent("click", closeEvent);
 		}.bind(this));
 	}
 });
