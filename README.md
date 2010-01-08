@@ -18,6 +18,7 @@ MooZoom can be initialized at any time, but it's best to initialize it on the
 the "duration" option.  The "close" option can be set to "none", "top-left",
 "top-right", "bottom-left", or "bottom-right" to specify where and if the close
 button should be displayed.  By default it displays in the top-left corner.
+The "transition" option can be used to override the default Fx.Transition.
 
 MooZoom will look through the DOM for &lt;a&gt;&lt;img&gt;&lt;/a&gt; patterns.
 The inner image should be the thumbnail version, and the href for the &lt;a&gt;

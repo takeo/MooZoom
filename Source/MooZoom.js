@@ -20,6 +20,7 @@ var MooZoom = new Class({
 
 	elements: null,
 	options: {
+		transition: Fx.Transitions.linear.easeOut,
 		duration: 250,
 		close: "top-left"
 	},
@@ -101,6 +102,7 @@ var MooZoom = new Class({
 					}
 
 					var closeMorph = new Fx.Morph(close, {
+						transition: this.options.transition,
 						duration: this.options.duration
 					});
 					closeMorph.start({
@@ -113,6 +115,7 @@ var MooZoom = new Class({
 				}
 
 				var morph = new Fx.Morph(container, {
+					transition: this.options.transition,
 					duration: this.options.duration,
 					onComplete: function(e) {
 						container.setStyles({
@@ -139,6 +142,7 @@ var MooZoom = new Class({
 				var endHeight = (smallCoords.height/bigCoords.height) * bigCoords.height;
 
 				var morph = new Fx.Morph(container, {
+					transition: this.options.transition,
 					duration: this.options.duration,
 					onComplete: function() {
 						container.setStyles({
@@ -153,6 +157,7 @@ var MooZoom = new Class({
 				});
 				if (this.options.close != "none") {
 					var closeMorph = new Fx.Morph(close, {
+						transition: this.options.transition,
 						duration: this.options.duration,
 						onComplete: function() {
 							close.setStyles({
