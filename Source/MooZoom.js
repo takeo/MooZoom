@@ -20,16 +20,7 @@ var MooZoom = new Class({
 
 	elements: null,
 	options: {
-		/* linkSelector: this is the first selector that is executed.  It
-		 *   should return a set of link elements.  The href of these link
-		 *   elements should point to a full-sized image.
-		 */
 		linkSelector: "a",
-		/* imageSelector: on each element returned by the linkSelector,
-		 *   this imageSelector will be applied to find the thumbnail image.
-		 *   By default a linkSelector and imageSelector combination will be
-		 *   looking for patterns like <a href=".."><img src=".."></a>
-		 */
 		imageSelector: "img",
 		imageRoot: "/images/",
 		transition: Fx.Transitions.linear.easeOut,
@@ -37,6 +28,12 @@ var MooZoom = new Class({
 		close: "top-left"
 	},
 
+	/**
+	 * Method: initialize
+	 *
+	 * Discover all the thumbnail images that match the selector patterns
+	 * and rework them in the DOM so they use the MooZoom niftiness.
+	 */
 	initialize: function(options) {
 		this.setOptions(options);
 		if (this.options.imageRoot[this.options.imageRoot.length-1] != "/")
@@ -50,8 +47,18 @@ var MooZoom = new Class({
 		}.bind(this));
 	},
 
+	/**
+	 * Method: setupImage
+	 *
+	 * Given a link to a big image (a) and a thumbnail image (img), do
+	 * the magic necessary to make the MooZoom thing work.
+	 */
 	setupImage: function(a, img) {
 		var href = a.getProperty("href");
+		a.setProperty("href", null);
+		a.setStyle("cursor", "pointer");
+
+		// preload the larger image
 		var container = new Element("img", {
 			src: href,
 			styles: {
@@ -62,7 +69,9 @@ var MooZoom = new Class({
 				"cursor": "pointer",
 				"border": "1px solid #000"
 			}
-		}).inject(document.body); // preload the image
+		}).inject(document.body);
+
+		// preload the close icon
 		if (this.options.close) {
 			var close = new Element("img", {
 				src: this.options.imageRoot+"/moozoom_close.png",
@@ -76,13 +85,16 @@ var MooZoom = new Class({
 			}).inject(document.body); // preload the image
 		}
 
-		a.setProperty("href", null);
-		a.setStyle("cursor", "pointer");
 		var bigCoords = null;
 		var smallCoords = null;
 
 		// grow the thumbnail
 		a.addEvent("click", function(e) {
+			// lazy load these values.
+			// they won't be set until the image has finished loading, so we
+			// can't call these until the image is loaded and injected into
+			// the DOM.  This code assumes when they click on the thumbnail,
+			// that the larger image has finished loading.
 			if (!bigCoords) bigCoords = container.getCoordinates();
 			if (!smallCoords) smallCoords = img.getCoordinates();
 
@@ -92,17 +104,26 @@ var MooZoom = new Class({
 			var endTop = bodyElem.getScroll().y + (bodyElem.getHeight() - bigCoords.height)/2;
 			var endLeft = bodyElem.getScroll().x + (bodyElem.getWidth() - bigCoords.width)/2;
 
-			var top = img.getCoordinates().top;
-			container.setStyles({
-				"position": "absolute",
-				"top": smallCoords.top,
-				"left": smallCoords.left,
-				"opacity": 0,
-				"width": startWidth,
-				"height": startHeight
-			});
-
+			// handle the close icon if it's supposed to be displayed.
+			// this.options.close will be null if it shouldn't be displayed.
 			if (this.options.close) {
+				// define the location of the close button
+				var closeTop = endTop - 10;
+				var closeLeft = endLeft - 10;
+				switch (this.options.close) {
+					case "bottom-right":
+						closeTop = endTop + bigCoords.height - 14;
+						closeLeft = endLeft + bigCoords.width - 14;
+						break;
+					case "bottom-left":
+						closeTop = endTop + bigCoords.height - 14;
+						break;
+					case "top-right":
+						closeLeft = endLeft + bigCoords.width - 14;
+						break;
+				}
+
+				// set initial placement of the close icon
 				close.setStyles({
 					"top": smallCoords.top,
 					"left": smallCoords.left,
@@ -110,22 +131,11 @@ var MooZoom = new Class({
 					"width": 1,
 					"height": 1
 				});
-				var closeTop = endTop - 10;
-				var closeLeft = endLeft - 10;
-				if (this.options.close == "top-right") {
-					closeLeft = endLeft + bigCoords.width - 14;
-				} else if (this.options.close == "bottom-left") {
-					closeTop = endTop + bigCoords.height - 14;
-				} else if (this.options.close == "bottom-right") {
-					closeTop = endTop + bigCoords.height - 14;
-					closeLeft = endLeft + bigCoords.width - 14;
-				}
-
-				var closeMorph = new Fx.Morph(close, {
+				// start the close icon growing animation
+				new Fx.Morph(close, {
 					transition: this.options.transition,
 					duration: this.options.duration
-				});
-				closeMorph.start({
+				}).start({
 					height: 24,
 					width: 24,
 					opacity: 1,
@@ -134,17 +144,29 @@ var MooZoom = new Class({
 				});
 			}
 
-			var morph = new Fx.Morph(container, {
+			// set initial placement of the image
+			container.setStyles({
+				"position": "absolute",
+				"top": smallCoords.top,
+				"left": smallCoords.left,
+				"opacity": 0,
+				"width": startWidth,
+				"height": startHeight
+			});
+			// start the image growing animation
+			new Fx.Morph(container, {
 				transition: this.options.transition,
 				duration: this.options.duration,
 				onComplete: function(e) {
+					// when the animation is complete, display the shadow.
+					// this is done at the end for performance reasons because
+					// the animation with the shadow is dog-slow on all browsers.
 					container.setStyles({
 						"-moz-box-shadow": "0px 2px 15px #000",
 						"-webkit-box-shadow": "0px 2px 15px #000"
 					});
 				}.bind(this)
-			});
-			morph.start({
+			}).start({
 				height: bigCoords.height,
 				width: bigCoords.width,
 				opacity: 1,
@@ -153,30 +175,24 @@ var MooZoom = new Class({
 			});
 		}.bind(this));
 
-		// shrink the large popup image
+		// create the event handler to shring the displayed image preview
 		var closeEvent = function(e) {
+			// lazy load these values, if they haven't already been set
 			if (!bigCoords) bigCoords = container.getCoordinates();
 			if (!smallCoords) smallCoords = img.getCoordinates();
 
 			var endWidth = (smallCoords.width/bigCoords.width) * bigCoords.width;
 			var endHeight = (smallCoords.height/bigCoords.height) * bigCoords.height;
 
-			var morph = new Fx.Morph(container, {
-				transition: this.options.transition,
-				duration: this.options.duration,
-				onComplete: function() {
-					container.setStyles({
-						"top": -99999,
-						"left": -99999
-					});
-				}
-			});
+			// turn off the shadows, because they slow down the animation
 			container.setStyles({
 				"-moz-box-shadow": "none",
 				"-webkit-box-shadow": "none"
 			});
+
+			// star the close icon shrinking animation
 			if (this.options.close) {
-				var closeMorph = new Fx.Morph(close, {
+				new Fx.Morph(close, {
 					transition: this.options.transition,
 					duration: this.options.duration,
 					onComplete: function() {
@@ -185,8 +201,7 @@ var MooZoom = new Class({
 							"left": -99999
 						});
 					}
-				});
-				closeMorph.start({
+				}).start({
 					width: 1,
 					height: 1,
 					opacity: 0,
@@ -194,17 +209,30 @@ var MooZoom = new Class({
 					left: smallCoords.left
 				});
 			}
-			morph.start({
+
+			// start the image shrinking animation
+			new Fx.Morph(container, {
+				transition: this.options.transition,
+				duration: this.options.duration,
+				onComplete: function() {
+					container.setStyles({
+						"top": -99999,
+						"left": -99999
+					});
+				}
+			}).start({
 				width: endWidth,
 				height: endHeight,
 				opacity: 0,
 				top: smallCoords.top,
 				left: smallCoords.left
 			});
+
 			e.stopPropagation();
 		}.bind(this);
-		container.addEvent("click", closeEvent);
 
+		// attach the shrink event to the various elements
+		container.addEvent("click", closeEvent);
 		if (this.options.close) {
 			close.addEvent("click", closeEvent);
 		}
