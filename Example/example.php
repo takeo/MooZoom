@@ -19,7 +19,10 @@ Click on the thumbnail images.
 
 <script type="text/javascript">
 	window.addEvent("domready", function() {
-			new MooZoom({duration:500});
+			new MooZoom({
+				duration: 500,
+				closeImageSrc: "../Images/moozoom_close.png"
+			});
 		});
 </script>
 

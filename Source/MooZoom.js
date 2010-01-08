@@ -20,6 +20,7 @@ var MooZoom = new Class({
 
 	elements: null,
 	options: {
+		closeImageSrc: "/images/moozoom_close.png",
 		transition: Fx.Transitions.linear.easeOut,
 		duration: 250,
 		close: "top-left"
@@ -45,7 +46,7 @@ var MooZoom = new Class({
 			}).inject(document.body); // preload the image
 			if (this.options.close != "none") {
 				var close = new Element("img", {
-					src: "../Images/moozoom_close.png",
+					src: this.options.closeImageSrc,
 					styles: {
 						"opacity": 0,
 						"top": -99999,

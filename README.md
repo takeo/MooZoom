@@ -20,6 +20,10 @@ the "duration" option.  The "close" option can be set to "none", "top-left",
 button should be displayed.  By default it displays in the top-left corner.
 The "transition" option can be used to override the default Fx.Transition.
 
+Important note: The close button image is located in the Images directory.
+By default, MooZoom will attempt to find that image at /images/moozoom_close.png.
+If you want the close image located elsewhere, use the "closeImageSrc" option.
+
 MooZoom will look through the DOM for &lt;a&gt;&lt;img&gt;&lt;/a&gt; patterns.
 The inner image should be the thumbnail version, and the href for the &lt;a&gt;
 tag should be a link to the full scale version of the image.  In this way, it's
@@ -30,6 +34,9 @@ tag should be a link to the full scale version of the image.  In this way, it's
 	<a href="/images/picture3.jpg"><img src="/images/picture3_thumb.jpg"></a>
 	<script type="text/javascript">
 		window.addEvent("domready", function() {
-			new MooZoom({duration:100});
+			new MooZoom({
+				duration: 150,
+				closeImageSrc: "/images/plugins/moozoom_close.png"
+			});
 		});
 	</script>
