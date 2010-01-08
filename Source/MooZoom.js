@@ -81,26 +81,40 @@ var MooZoom = new Class({
 					"height": startHeight
 				});
 
+				if (this.options.close != "none") {
+					close.setStyles({
+						"top": smallCoords.top,
+						"left": smallCoords.left,
+						"opacity": 0,
+						"width": 1,
+						"height": 1
+					});
+					var closeTop = endTop - 10;
+					var closeLeft = endLeft - 10;
+					if (this.options.close == "top-right") {
+						closeLeft = endLeft + bigCoords.width - 14;
+					} else if (this.options.close == "bottom-left") {
+						closeTop = endTop + bigCoords.height - 14;
+					} else if (this.options.close == "bottom-right") {
+						closeTop = endTop + bigCoords.height - 14;
+						closeLeft = endLeft + bigCoords.width - 14;
+					}
+
+					var closeMorph = new Fx.Morph(close, {
+						duration: this.options.duration
+					});
+					closeMorph.start({
+						height: 24,
+						width: 24,
+						opacity: 1,
+						top: closeTop,
+						left: closeLeft
+					});
+				}
+
 				var morph = new Fx.Morph(container, {
 					duration: this.options.duration,
 					onComplete: function(e) {
-						if (this.options.close != "none") {
-							var closeTop = endTop - 10;
-							var closeLeft = endLeft - 10;
-							if (this.options.close == "top-right") {
-								closeLeft = endLeft + bigCoords.width - 14;
-							} else if (this.options.close == "bottom-left") {
-								closeTop = endTop + bigCoords.height - 14;
-							} else if (this.options.close == "bottom-right") {
-								closeTop = endTop + bigCoords.height - 14;
-								closeLeft = endLeft + bigCoords.width - 14;
-							}
-							close.setStyles({
-								"top": closeTop,
-								"left": closeLeft,
-							});
-							close.morph({"opacity": 1});
-						}
 						container.setStyles({
 							"-moz-box-shadow": "0px 2px 15px #000",
 							"-webkit-box-shadow": "0px 2px 15px #000"
@@ -133,17 +147,28 @@ var MooZoom = new Class({
 						});
 					}
 				});
-				if (this.options.close != "none") {
-					close.setStyles({
-						"top": -99999,
-						"left": -99999,
-						"opacity": 0
-					});
-				}
 				container.setStyles({
 					"-moz-box-shadow": "none",
 					"-webkit-box-shadow": "none"
 				});
+				if (this.options.close != "none") {
+					var closeMorph = new Fx.Morph(close, {
+						duration: this.options.duration,
+						onComplete: function() {
+							close.setStyles({
+								"top": -99999,
+								"left": -99999
+							});
+						}
+					});
+					closeMorph.start({
+						width: 1,
+						height: 1,
+						opacity: 0,
+						top: smallCoords.top,
+						left: smallCoords.left
+					});
+				}
 				morph.start({
 					width: endWidth,
 					height: endHeight,
