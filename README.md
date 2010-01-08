@@ -15,7 +15,9 @@ How to Use
 
 MooZoom can be initialized at any time, but it's best to initialize it on the
 "domready" event.  By default, zooms will take 250ms, but you can change this with
-the "duration" option.
+the "duration" option.  The "close" option can be set to "none", "top-left",
+"top-right", "bottom-left", or "bottom-right" to specify where and if the close
+button should be displayed.  By default it displays in the top-left corner.
 
 MooZoom will look through the DOM for &lt;a&gt;&lt;img&gt;&lt;/a&gt; patterns.
 The inner image should be the thumbnail version, and the href for the &lt;a&gt;

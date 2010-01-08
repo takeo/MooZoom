@@ -20,10 +20,13 @@ var MooZoom = new Class({
 
 	elements: null,
 	options: {
-		duration: 250
+		duration: 250,
+		close: "top-left"
 	},
 
 	initialize: function(options) {
+		this.setOptions(options);
+
 		this.elements = document.getElements("a img");
 		this.elements.each(function(img) {
 			var a = img.getParent();
@@ -39,16 +42,18 @@ var MooZoom = new Class({
 					"border": "1px solid #000"
 				}
 			}).inject(document.body); // preload the image
-			var close = new Element("img", {
-				src: "../Images/moozoom_close.png",
-				styles: {
-					"opacity": 0,
-					"top": -99999,
-					"left": -99999,
-					"position": "absolute",
-					"cursor": "pointer"
-				}
-			}).inject(document.body); // preload the image
+			if (this.options.close != "none") {
+				var close = new Element("img", {
+					src: "../Images/moozoom_close.png",
+					styles: {
+						"opacity": 0,
+						"top": -99999,
+						"left": -99999,
+						"position": "absolute",
+						"cursor": "pointer"
+					}
+				}).inject(document.body); // preload the image
+			}
 
 			a.setProperty("href", null);
 			a.setStyle("cursor", "pointer");
@@ -79,16 +84,28 @@ var MooZoom = new Class({
 				var morph = new Fx.Morph(container, {
 					duration: this.options.duration,
 					onComplete: function(e) {
-						close.setStyles({
-							"top": endTop-10,
-							"left": endLeft-10
-						});
-						close.morph({"opacity": 1});
+						if (this.options.close != "none") {
+							var closeTop = endTop - 10;
+							var closeLeft = endLeft - 10;
+							if (this.options.close == "top-right") {
+								closeLeft = endLeft + bigCoords.width - 14;
+							} else if (this.options.close == "bottom-left") {
+								closeTop = endTop + bigCoords.height - 14;
+							} else if (this.options.close == "bottom-right") {
+								closeTop = endTop + bigCoords.height - 14;
+								closeLeft = endLeft + bigCoords.width - 14;
+							}
+							close.setStyles({
+								"top": closeTop,
+								"left": closeLeft,
+							});
+							close.morph({"opacity": 1});
+						}
 						container.setStyles({
 							"-moz-box-shadow": "0px 2px 15px #000",
 							"-webkit-box-shadow": "0px 2px 15px #000"
 						});
-					}
+					}.bind(this)
 				});
 				morph.start({
 					height: bigCoords.height,
@@ -116,11 +133,13 @@ var MooZoom = new Class({
 						});
 					}
 				});
-				close.setStyles({
-					"top": -99999,
-					"left": -99999,
-					"opacity": 0
-				});
+				if (this.options.close != "none") {
+					close.setStyles({
+						"top": -99999,
+						"left": -99999,
+						"opacity": 0
+					});
+				}
 				container.setStyles({
 					"-moz-box-shadow": "none",
 					"-webkit-box-shadow": "none"
@@ -135,7 +154,10 @@ var MooZoom = new Class({
 				e.stopPropagation();
 			}.bind(this);
 			container.addEvent("click", closeEvent);
-			close.addEvent("click", closeEvent);
+
+			if (this.options.close != "none") {
+				close.addEvent("click", closeEvent);
+			}
 		}.bind(this));
 	}
 });
